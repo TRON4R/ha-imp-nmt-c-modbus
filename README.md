@@ -34,7 +34,7 @@ The NMTC module provides the Modbus TCP/RTU interface. The Modbus register map i
 
 ## Entity Quality
 
-All sensors have been carefully defined with correct and complete HA metadata: `unique_id`, `device_class`, `state_class`, `unit_of_measurement`, `scale`, `precision` and `input_type` are set for each entity. All template sensors include `availability` templates to correctly show `unavailable` instead of misleading default values when the Modbus connection is lost.
+All sensors are defined with correct and complete HA metadata: `unique_id`, `device_class`, `state_class`, `unit_of_measurement`, `scale`, `precision` and `input_type` are carefully set for each entity. All template sensors include `availability` templates to correctly show `unavailable` instead of misleading default values when the Modbus connection is lost. This means long-term statistics, energy dashboard integration and history graphs work out of the box without manual configuration.
 
 ## Requirements
 
