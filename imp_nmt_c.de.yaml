@@ -1,7 +1,21 @@
 # ==============================================================================
-# IMP NMT MAX II C SM 25-120-180 Heizkreislaufpumpe 
-# Home Assistant ModBus TCP Integration (v2-enhanced)
+# IMP NMT C Serie — Home Assistant Modbus TCP Integration
 # ==============================================================================
+# NMTC-Modul (Art. 7340055) Modbus TCP Konfiguration
+# Dokumentation: NMTC-Handbuch v37, Kapitel 8 „Modbus"
+#
+# Kompatible Pumpen: NMT Smart C, NMT Max C, NMT Lan C, NMT Max II C,
+#                    NMT Smart II C
+#
+# YAML erstellt 2025/2026 von TRON4R
+#
+# INSTALLATION:
+# 1. Diese Datei nach /config/packages/imp_nmt_c.de.yaml kopieren
+# 2. In configuration.yaml eintragen:
+#    homeassistant:
+#      packages: !include_dir_named packages
+# 3. IP-Adresse unten anpassen (Zeile 23)
+# 4. Home Assistant neu starten
 #
 modbus:
   - name: nmt_max_ii_pump

@@ -2,7 +2,7 @@
 # IMP NMT C Series — Home Assistant Modbus TCP Integration
 # ==============================================================================
 # NMTC module (art. 7340055) Modbus TCP configuration
-# Documentation: NMTC manual v36 / v37, chapter 8 "Modbus"
+# Documentation: NMTC manual v37, chapter 8 "Modbus"
 #
 # Compatible pumps: NMT Smart C, NMT Max C, NMT Lan C, NMT Max II C,
 #                   NMT Smart II C
