@@ -51,7 +51,7 @@ All sensors are defined with correct and complete HA metadata: `unique_id`, `dev
    homeassistant:
      packages: !include_dir_named packages
    ```
-3. Update the NMTC module IP address (line 23 in the YAML):
+3. Adjust the NMTC module IP address in the YAML:
    ```yaml
    host: 192.168.2.17  # ← CHANGE: IP of your NMTC module
    ```

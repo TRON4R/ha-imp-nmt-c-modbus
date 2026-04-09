@@ -51,7 +51,7 @@ Alle Sensoren sind mit korrekten und vollständigen HA-Metadaten definiert: `uni
    homeassistant:
      packages: !include_dir_named packages
    ```
-3. IP-Adresse des NMTC-Moduls anpassen (Zeile 9 in der YAML):
+3. IP-Adresse des NMTC-Moduls in der YAML anpassen:
    ```yaml
    host: 192.168.2.17  # ← ÄNDERN: IP des NMTC-Moduls
    ```

@@ -14,7 +14,7 @@
 # 2. In configuration.yaml eintragen:
 #    homeassistant:
 #      packages: !include_dir_named packages
-# 3. IP-Adresse unten anpassen (Zeile 23)
+# 3. IP-Adresse des NMTC-Moduls in der YAML anpassen
 # 4. Home Assistant neu starten
 #
 modbus:
