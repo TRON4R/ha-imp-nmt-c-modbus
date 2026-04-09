@@ -34,7 +34,7 @@ Das NMTC-Modul stellt die Modbus TCP/RTU-Schnittstelle bereit. Die Modbus-Regist
 
 ## Entity-Qualität
 
-Alle Sensoren sind mit korrekten und vollständigen HA-Metadaten definiert: `unique_id`, `device_class`, `state_class`, `unit_of_measurement`, `scale`, `precision` und `input_type` sind für jede Entity bestmöglich gesetzt. Alle Template-Sensoren enthalten `availability`-Templates, um bei Verbindungsverlust korrekt `unavailable` anzuzeigen statt irreführender Standardwerte. Dadurch funktionieren Langzeitstatistiken, Energiedashboard-Integration und History-Graphen sofort und ohne manuelle Nacharbeit.
+Alle Sensoren sind mit korrekten und vollständigen HA-Metadaten definiert: `unique_id`, `device_class`, `state_class`, `unit_of_measurement`, `scale`, `precision` und `input_type` sind für jede Entity bestmöglich gesetzt. Dadurch funktionieren Langzeitstatistiken, Energiedashboard-Integration und History-Graphen sofort und ohne manuelle Nacharbeit. Alle Template-Sensoren enthalten `availability`-Templates, um bei Verbindungsverlust korrekt `unavailable` anzuzeigen statt irreführender Standardwerte.
 
 ## Voraussetzungen
 
