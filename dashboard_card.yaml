@@ -1,0 +1,128 @@
+type: custom:vertical-stack-in-card
+cards:
+  - type: heading
+    heading: IMP NMT C Circulation Pump
+    heading_style: title
+    icon: mdi:pipe-valve
+    badges:
+      - type: entity
+        entity: sensor.nmt_pump_control_mode_text
+    card_mod:
+      style: |
+        ha-icon {
+          color: blue !important;
+        }
+        :host {
+          margin-top: 8px !important;
+        }
+  - type: horizontal-stack
+    cards:
+      - type: gauge
+        entity: sensor.nmt_pump_head
+        name: Head
+        unit: m
+        min: 0
+        max: 12.5
+        severity:
+          green: 0
+          yellow: 10
+          red: 12
+        needle: true
+        card_mod:
+          style: |
+            ha-card {
+              border: none !important;
+              box-shadow: none !important;
+            }
+      - type: gauge
+        entity: sensor.nmt_pump_power_consumption
+        name: Power
+        unit: W
+        min: 0
+        max: 380
+        severity:
+          green: 0
+          yellow: 200
+          red: 300
+        needle: true
+        card_mod:
+          style: |
+            ha-card {
+              border: none !important;
+              box-shadow: none !important;
+            }
+      - type: gauge
+        entity: sensor.nmt_pump_speed
+        name: Speed
+        unit: rpm
+        min: 0
+        max: 5100
+        severity:
+          green: 0
+          yellow: 4000
+          red: 4500
+        needle: true
+        card_mod:
+          style: |
+            ha-card {
+              border: none !important;
+              box-shadow: none !important;
+            }
+  - type: horizontal-stack
+    cards:
+      - type: gauge
+        entity: sensor.nmt_pump_flow_l_h
+        name: Flow
+        unit: L/h
+        min: 0
+        max: 4000
+        severity:
+          green: 0
+          yellow: 3500
+          red: 3800
+        needle: true
+        card_mod:
+          style: |
+            ha-card {
+              border: none !important;
+              box-shadow: none !important;
+            }
+      - type: gauge
+        entity: sensor.nmt_pump_actual_setpoint
+        name: Setpoint
+        unit: "%"
+        min: 0
+        max: 100
+        severity:
+          green: 0
+          yellow: 80
+          red: 90
+        needle: true
+        card_mod:
+          style: |
+            ha-card {
+              border: none !important;
+              box-shadow: none !important;
+            }
+      - type: gauge
+        entity: sensor.nmt_pump_liquid_temperature
+        name: Liquid Temp
+        unit: °C
+        min: 0
+        max: 80
+        severity:
+          green: 0
+          yellow: 60
+          red: 70
+        needle: true
+        card_mod:
+          style: |
+            ha-card {
+              border: none !important;
+              box-shadow: none !important;
+            }
+card_mod:
+  style: |
+    ha-card > :first-child {
+      padding-top: 12px;
+    }

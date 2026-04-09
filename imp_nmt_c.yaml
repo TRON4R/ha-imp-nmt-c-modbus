@@ -1,0 +1,497 @@
+# ==============================================================================
+# IMP NMT C Series — Home Assistant Modbus TCP Integration
+# ==============================================================================
+# NMTC module (art. 7340055) Modbus TCP configuration
+# Documentation: NMTC manual v36 / v37, chapter 8 "Modbus"
+#
+# Compatible pumps: NMT Smart C, NMT Max C, NMT Lan C, NMT Max II C,
+#                   NMT Smart II C
+#
+# YAML created in 2025/2026 by TRON4R
+#
+# INSTALLATION:
+# 1. Copy this file to /config/packages/imp_nmt_c.yaml
+# 2. Add to configuration.yaml:
+#    homeassistant:
+#      packages: !include_dir_named packages
+# 3. Adjust IP address below (line 23)
+# 4. Restart Home Assistant
+#
+modbus:
+  - name: nmt_c_pump
+    type: tcp
+    host: 192.168.2.17  # ← CHANGE: IP of your NMTC module (default: 192.168.0.245)
+    port: 502
+    # timeout: 5  # Optional: increase if the pump responds slowly
+
+    sensors:
+      # --- Pump Data (Register Block 301) ---
+      # NMTC manual p.44. Register addresses are 1-based; HA uses 0-based (address = reg - 1).
+      # Both function codes 0x03 (holding) and 0x04 (input) are supported.
+
+      - name: "NMT Pump Head"
+        unique_id: nmt_pump_head
+        address: 300  # Reg 301 (Head)
+        input_type: holding
+        data_type: uint16
+        slave: 245  # NMTC default slave address
+        unit_of_measurement: "m"
+        scale: 0.01
+        precision: 2
+        device_class: distance
+        state_class: measurement
+        # scan_interval: 30
+
+      - name: "NMT Pump Flow"
+        unique_id: nmt_pump_flow
+        address: 301  # Reg 302 (Flow)
+        input_type: holding
+        data_type: uint16
+        slave: 245
+        unit_of_measurement: "m³/h"
+        scale: 0.1
+        precision: 1
+        device_class: volume_flow_rate
+        state_class: measurement
+        # scan_interval: 30
+
+      - name: "NMT Pump Efficiency"
+        unique_id: nmt_pump_efficiency
+        address: 302  # Reg 303 (Efficiency)
+        input_type: holding
+        data_type: uint16
+        slave: 245
+        unit_of_measurement: "%"
+        scale: 0.01
+        precision: 1
+        state_class: measurement
+        # scan_interval: 30
+
+      - name: "NMT Pump Speed"
+        unique_id: nmt_pump_speed
+        address: 303  # Reg 304 (Speed)
+        input_type: holding
+        data_type: uint16
+        slave: 245
+        unit_of_measurement: "rpm"
+        # device_class: speed  # HA speed class only accepts velocity units, not rpm
+        state_class: measurement
+        # scan_interval: 30
+
+      - name: "NMT Pump Frequency"
+        unique_id: nmt_pump_frequency
+        address: 304  # Reg 305 (Frequency)
+        input_type: holding
+        data_type: uint16
+        slave: 245
+        unit_of_measurement: "Hz"
+        scale: 0.1
+        precision: 1
+        device_class: frequency
+        state_class: measurement
+        # scan_interval: 30
+
+      - name: "NMT Pump Actual Setpoint"
+        unique_id: nmt_pump_actual_setpoint
+        address: 307  # Reg 308 (ActualSetPoint)
+        input_type: holding
+        slave: 245
+        # Range: 0..10000 (0.01%), can be -1 (internal pump regulation)
+        data_type: int16
+        unit_of_measurement: "%"
+        scale: 0.01
+        precision: 2
+        state_class: measurement
+        # scan_interval: 30
+
+      - name: "NMT Pump Power Consumption"
+        unique_id: nmt_pump_power_consumption
+        address: 311  # Reg 312/313 (PowerHI/PowerLO)
+        input_type: holding
+        slave: 245
+        data_type: uint32
+        unit_of_measurement: "W"
+        device_class: power
+        state_class: measurement
+        # scan_interval: 30
+
+      - name: "NMT Pump Circuit Temperature"
+        unique_id: nmt_pump_temp_circuit
+        address: 317  # Reg 318 (CircuitTemp)
+        input_type: holding
+        slave: 245
+        data_type: int16
+        unit_of_measurement: "°C"
+        scale: 0.01
+        precision: 1
+        device_class: temperature
+        state_class: measurement
+        # scan_interval: 30
+
+      - name: "NMT Pump Motor Temperature"
+        unique_id: nmt_pump_temp_motor
+        address: 318  # Reg 319 (MotorTemp)
+        input_type: holding
+        slave: 245
+        data_type: int16
+        unit_of_measurement: "°C"
+        scale: 0.01
+        precision: 1
+        device_class: temperature
+        state_class: measurement
+        # scan_interval: 30
+
+      - name: "NMT Pump Liquid Temperature"
+        unique_id: nmt_pump_temp_liquid
+        address: 321  # Reg 322 (LiquidTemp)
+        input_type: holding
+        data_type: int16
+        slave: 245
+        unit_of_measurement: "°C"
+        scale: 0.01
+        precision: 1
+        device_class: temperature
+        state_class: measurement
+        # scan_interval: 30
+
+    #
+    # The following registers are not available on all models (see NMTC manual footnote 8).
+    # Uncomment if your pump supports them. If values seem wrong, try adding 'swap: word'.
+    #
+    #  - name: "NMT Pump Operation Time"
+    #    unique_id: nmt_pump_operation_time
+    #    address: 326  # Reg 327/328 (OperationTimeHI/LO)
+    #    input_type: holding
+    #    slave: 245
+    #    data_type: uint32
+    #    unit_of_measurement: "h"
+    #    device_class: duration
+    #    state_class: total_increasing
+    #    # scan_interval: 300
+    #
+    #  - name: "NMT Pump Total Powered Time"
+    #    unique_id: nmt_pump_total_powered_time
+    #    address: 328  # Reg 329/330 (TotalPoweredTimeHI/LO)
+    #    input_type: holding
+    #    slave: 245
+    #    data_type: uint32
+    #    unit_of_measurement: "h"
+    #    device_class: duration
+    #    state_class: total_increasing
+    #    # scan_interval: 300
+    #
+    #  - name: "NMT Pump Total Energy"
+    #    unique_id: nmt_pump_energy_consumption_total
+    #    address: 331  # Reg 332/333 (EnergyHI/LO)
+    #    input_type: holding
+    #    slave: 245
+    #    data_type: uint32
+    #    unit_of_measurement: "kWh"
+    #    device_class: energy
+    #    state_class: total_increasing
+    #    # scan_interval: 300
+
+      # --- Pump Status (Register Block 201) ---
+      # Raw status register — decoded into binary sensors below.
+      - name: "NMT Pump Status Register (Raw)"
+        unique_id: nmt_pump_status_raw
+        address: 200  # Reg 201 (StatusReg)
+        input_type: holding
+        slave: 245
+        data_type: uint16
+        # scan_interval: 30
+
+      - name: "NMT Pump Alt Control Mode (Status)"
+        unique_id: nmt_pump_alt_control_mode_status
+        address: 202  # Reg 203 (ControlMode — Alt Enumeration)
+        input_type: holding
+        slave: 245
+        data_type: uint16
+        # scan_interval: 30
+        # Enum/code value — no unit/device_class applicable.
+
+      - name: "NMT Pump Error Code 1"
+        unique_id: nmt_pump_error_code_1
+        address: 204  # Reg 205 (ErrorCode1)
+        input_type: holding
+        slave: 245
+        data_type: uint16
+        # scan_interval: 30
+
+      - name: "NMT Pump Error Code 2"
+        unique_id: nmt_pump_error_code_2
+        address: 205  # Reg 206 (ErrorCode2)
+        input_type: holding
+        slave: 245
+        data_type: uint16
+        # scan_interval: 30
+
+      - name: "NMT Pump Error Code 3"
+        unique_id: nmt_pump_error_code_3
+        address: 206  # Reg 207 (ErrorCode3)
+        input_type: holding
+        slave: 245
+        data_type: uint16
+        # scan_interval: 30
+
+      - name: "NMT Pump Control Mode (Status)"
+        unique_id: nmt_pump_control_mode_status
+        address: 207  # Reg 208 (ControlMode 0..3)
+        input_type: holding
+        slave: 245
+        data_type: uint16
+        # scan_interval: 30
+        # Enum/code value — no unit/device_class applicable.
+
+  # ==========================================================================
+  # Register 101 (Pump Control Register) — INTENTIONALLY NOT IMPLEMENTED
+  # ==========================================================================
+  # Register 101 controls Local/Remote mode and Start/Stop via individual bits:
+  #   Bit 0: RemoteAccess (0=Local, 1=Remote control via Modbus)
+  #   Bit 1: OnOffReq (0=Stop, 1=Start — only effective when Bit 0 = 1)
+  #
+  # PROBLEM: HA's Modbus integration can only write the entire 16-bit word
+  # (no bitwise read-modify-write). A write operation therefore overwrites
+  # ALL bits simultaneously, which can cause unintended behavior
+  # (pump was shut down during testing).
+  #
+  # In the repository author's installation, the Lambda heat pump controls
+  # the NMT pump via Analog/PWM. A Modbus write to register 101 would
+  # take control away from the Lambda.
+  #
+  # Similar considerations apply to Register 104 (SetPoint) and
+  # Register 108 (ControlMode).
+  # ==========================================================================
+
+
+# --- Template sensors for status register bit decoding ---
+# This section is at the same level as 'modbus:', not indented below it.
+template:
+  - binary_sensor:
+      - name: "NMT Pump Rotating"
+        unique_id: nmt_pump_is_running_template
+        availability: >
+          {{ states('sensor.nmt_pump_status_register_raw') | is_number }}
+        # Bit 6 (value 64): Rotation indicator
+        state: >
+          {% if states('sensor.nmt_pump_status_register_raw') | is_number %}
+            {{ (states('sensor.nmt_pump_status_register_raw') | int | bitwise_and(64)) > 0 }}
+          {% else %}
+            False
+          {% endif %}
+
+      - name: "NMT Pump Modbus Remote Active"
+        unique_id: nmt_pump_remote_active_template
+        availability: >
+          {{ states('sensor.nmt_pump_status_register_raw') | is_number }}
+        # Bit 8 (value 256): AccessMode
+        state: >
+          {% if states('sensor.nmt_pump_status_register_raw') | is_number %}
+            {{ (states('sensor.nmt_pump_status_register_raw') | int | bitwise_and(256)) > 0 }}
+          {% else %}
+            False
+          {% endif %}
+
+      - name: "NMT Pump Error Status"
+        unique_id: nmt_pump_error_status_template
+        device_class: problem
+        availability: >
+          {{ states('sensor.nmt_pump_status_register_raw') | is_number }}
+        # Bit 10 (value 1024): Error flag
+        state: >
+          {% if states('sensor.nmt_pump_status_register_raw') | is_number %}
+            {{ (states('sensor.nmt_pump_status_register_raw') | int | bitwise_and(1024)) > 0 }}
+          {% else %}
+            False
+          {% endif %}
+
+      - name: "NMT Pump Fault Active"
+        unique_id: nmt_pump_fault_active
+        device_class: problem
+        availability: >
+          {{ (states('sensor.nmt_pump_error_code_1') | is_number) and
+             (states('sensor.nmt_pump_error_code_2') | is_number) and
+             (states('sensor.nmt_pump_error_code_3') | is_number) }}
+        state: >-
+          {% set e1 = states('sensor.nmt_pump_error_code_1') | int(0) %}
+          {% set e2 = states('sensor.nmt_pump_error_code_2') | int(0) %}
+          {% set e3 = states('sensor.nmt_pump_error_code_3') | int(0) %}
+          {{ (e1 != 0) or (e2 != 0) or (e3 != 0) }}
+
+  #
+  # Status and error code text mapping
+  #
+  - sensor:
+      # --- Reg 203: ControlMode (Alt Enumeration 0..6, 128) -> Text ---
+      - name: "NMT Pump Alt Control Mode (Text)"
+        unique_id: nmt_pump_alt_control_mode_text
+        icon: mdi:shuffle-variant
+        availability: >
+          {{ states('sensor.nmt_pump_alt_control_mode_status') | is_number }}
+        state: >-
+          {% set v = states('sensor.nmt_pump_alt_control_mode_status') | int(-999) %}
+          {% if v in [0,1] %}Constant RPM
+          {% elif v in [3,4,5] %}Constant Head
+          {% elif v == 6 %}Proportional Head
+          {% elif v == 128 %}Auto Head Mode
+          {% elif v == -999 %}Unknown
+          {% else %}Undefined ({{ v }})
+          {% endif %}
+
+      # --- Reg 208: ControlMode (0..3) -> Text ---
+      - name: "NMT Pump Control Mode (Text)"
+        unique_id: nmt_pump_control_mode_text
+        icon: mdi:tune
+        availability: >
+          {{ states('sensor.nmt_pump_control_mode_status') | is_number }}
+        state: >-
+          {% set v = states('sensor.nmt_pump_control_mode_status') | int(-999) %}
+          {% if v == 0 %}Auto Head Mode
+          {% elif v == 1 %}Proportional Head
+          {% elif v == 2 %}Constant Head
+          {% elif v == 3 %}Constant RPM
+          {% elif v == -999 %}Unknown
+          {% else %}Reserved ({{ v }})
+          {% endif %}
+
+      # --- Reg 205, 206, 207: ErrorCode 1..3 -> Text ---
+      # NOTE: The following three error code text sensors use identical Jinja
+      # templates (only the source entity differs).
+      # When adding error codes, update all three places.
+      - name: "NMT Pump Error Code 1 (Text)"
+        unique_id: nmt_pump_error_code_1_text
+        availability: >
+          {{ states('sensor.nmt_pump_error_code_1') | is_number }}
+        icon: >-
+          {% set v = states('sensor.nmt_pump_error_code_1') | int(0) %}
+          {% if v == 0 %}mdi:check-circle{% else %}mdi:alert-circle{% endif %}
+        state: >-
+          {% set e = states('sensor.nmt_pump_error_code_1') | int(0) %}
+          {% if e == 0 %}OK
+          {% elif e == 10 %}E10 (drY) – Low motor load (dry running)
+          {% elif e == 11 %}E11 – High motor load (motor defective or medium too viscous)
+          {% elif e == 22 %}E22 (hot) – Inverter temp protection (power < 2/3 due to ambient temp)
+          {% elif e == 23 %}E23 – Inverter temp protection (pump stopped due to ambient temp)
+          {% elif e == 24 %}E24 – Motor overcurrent (rotor blocked or inverter defective)
+          {% elif e == 25 %}E25 – Overvoltage (supply voltage too high)
+          {% elif e == 26 %}E26 – Undervoltage (supply voltage too low)
+          {% elif e == 27 %}E27 – PFC overcurrent (inverter/PFC choke possibly defective)
+          {% elif e == 31 %}E31 – Software motor protection (power reduced; high medium temp + load)
+          {% elif e == 40 %}E40 – General inverter error (self-test failed; inverter defective)
+          {% elif e == 42 %}E42 (LEd) – LED faulty (display segment diode defective)
+          {% elif e == 43 %}E43 (con) – Internal communication fault (internal wiring/bus)
+          {% elif e == 44 %}E44 – DC link current offset (PFC/DC-link out of tolerance)
+          {% elif e == 45 %}E45 – Motor temp sensor faulty (motor temperature invalid)
+          {% elif e == 46 %}E46 – Inverter temp sensor faulty (inverter temperature invalid)
+          {% elif e == 47 %}E47 – Voltage reference outside limits
+          {% elif e == 48 %}E48 – Internal 15V supply outside limits
+          {% elif e == 49 %}E49 – Test load does not match (reference load test failed)
+          {% elif e == 51 %}E51 – Motor parameters out of range (motor damaged/disconnected)
+          {% elif e == 52 %}E52 – Thermal protection active (motor too hot)
+          {% elif e == 53 %}E53 – Invalid model selected (pump model incompatible/mismatch)
+          {% else %}Error code {{ e }} (unknown)
+          {% endif %}
+
+      - name: "NMT Pump Error Code 2 (Text)"
+        unique_id: nmt_pump_error_code_2_text
+        availability: >
+          {{ states('sensor.nmt_pump_error_code_2') | is_number }}
+        icon: >-
+          {% set v = states('sensor.nmt_pump_error_code_2') | int(0) %}
+          {% if v == 0 %}mdi:check-circle{% else %}mdi:alert-circle{% endif %}
+        state: >-
+          {% set e = states('sensor.nmt_pump_error_code_2') | int(0) %}
+          {% if e == 0 %}OK
+          {% elif e == 10 %}E10 (drY) – Low motor load (dry running)
+          {% elif e == 11 %}E11 – High motor load (motor defective or medium too viscous)
+          {% elif e == 22 %}E22 (hot) – Inverter temp protection (power < 2/3 due to ambient temp)
+          {% elif e == 23 %}E23 – Inverter temp protection (pump stopped due to ambient temp)
+          {% elif e == 24 %}E24 – Motor overcurrent (rotor blocked or inverter defective)
+          {% elif e == 25 %}E25 – Overvoltage (supply voltage too high)
+          {% elif e == 26 %}E26 – Undervoltage (supply voltage too low)
+          {% elif e == 27 %}E27 – PFC overcurrent (inverter/PFC choke possibly defective)
+          {% elif e == 31 %}E31 – Software motor protection (power reduced; high medium temp + load)
+          {% elif e == 40 %}E40 – General inverter error (self-test failed; inverter defective)
+          {% elif e == 42 %}E42 (LEd) – LED faulty (display segment diode defective)
+          {% elif e == 43 %}E43 (con) – Internal communication fault (internal wiring/bus)
+          {% elif e == 44 %}E44 – DC link current offset (PFC/DC-link out of tolerance)
+          {% elif e == 45 %}E45 – Motor temp sensor faulty (motor temperature invalid)
+          {% elif e == 46 %}E46 – Inverter temp sensor faulty (inverter temperature invalid)
+          {% elif e == 47 %}E47 – Voltage reference outside limits
+          {% elif e == 48 %}E48 – Internal 15V supply outside limits
+          {% elif e == 49 %}E49 – Test load does not match (reference load test failed)
+          {% elif e == 51 %}E51 – Motor parameters out of range (motor damaged/disconnected)
+          {% elif e == 52 %}E52 – Thermal protection active (motor too hot)
+          {% elif e == 53 %}E53 – Invalid model selected (pump model incompatible/mismatch)
+          {% else %}Error code {{ e }} (unknown)
+          {% endif %}
+
+      - name: "NMT Pump Error Code 3 (Text)"
+        unique_id: nmt_pump_error_code_3_text
+        availability: >
+          {{ states('sensor.nmt_pump_error_code_3') | is_number }}
+        icon: >-
+          {% set v = states('sensor.nmt_pump_error_code_3') | int(0) %}
+          {% if v == 0 %}mdi:check-circle{% else %}mdi:alert-circle{% endif %}
+        state: >-
+          {% set e = states('sensor.nmt_pump_error_code_3') | int(0) %}
+          {% if e == 0 %}OK
+          {% elif e == 10 %}E10 (drY) – Low motor load (dry running)
+          {% elif e == 11 %}E11 – High motor load (motor defective or medium too viscous)
+          {% elif e == 22 %}E22 (hot) – Inverter temp protection (power < 2/3 due to ambient temp)
+          {% elif e == 23 %}E23 – Inverter temp protection (pump stopped due to ambient temp)
+          {% elif e == 24 %}E24 – Motor overcurrent (rotor blocked or inverter defective)
+          {% elif e == 25 %}E25 – Overvoltage (supply voltage too high)
+          {% elif e == 26 %}E26 – Undervoltage (supply voltage too low)
+          {% elif e == 27 %}E27 – PFC overcurrent (inverter/PFC choke possibly defective)
+          {% elif e == 31 %}E31 – Software motor protection (power reduced; high medium temp + load)
+          {% elif e == 40 %}E40 – General inverter error (self-test failed; inverter defective)
+          {% elif e == 42 %}E42 (LEd) – LED faulty (display segment diode defective)
+          {% elif e == 43 %}E43 (con) – Internal communication fault (internal wiring/bus)
+          {% elif e == 44 %}E44 – DC link current offset (PFC/DC-link out of tolerance)
+          {% elif e == 45 %}E45 – Motor temp sensor faulty (motor temperature invalid)
+          {% elif e == 46 %}E46 – Inverter temp sensor faulty (inverter temperature invalid)
+          {% elif e == 47 %}E47 – Voltage reference outside limits
+          {% elif e == 48 %}E48 – Internal 15V supply outside limits
+          {% elif e == 49 %}E49 – Test load does not match (reference load test failed)
+          {% elif e == 51 %}E51 – Motor parameters out of range (motor damaged/disconnected)
+          {% elif e == 52 %}E52 – Thermal protection active (motor too hot)
+          {% elif e == 53 %}E53 – Invalid model selected (pump model incompatible/mismatch)
+          {% else %}Error code {{ e }} (unknown)
+          {% endif %}
+
+      # --- Summary: active error codes ---
+      - name: "NMT Pump Error Summary"
+        unique_id: nmt_pump_error_summary
+        icon: mdi:alert-outline
+        availability: >
+          {{ (states('sensor.nmt_pump_error_code_1') | is_number) and
+             (states('sensor.nmt_pump_error_code_2') | is_number) and
+             (states('sensor.nmt_pump_error_code_3') | is_number) }}
+        state: >-
+          {% set codes = [
+            states('sensor.nmt_pump_error_code_1')|int(0),
+            states('sensor.nmt_pump_error_code_2')|int(0),
+            states('sensor.nmt_pump_error_code_3')|int(0)
+          ] %}
+          {% set lst = [] %}
+          {% for c in codes %}
+            {% if c != 0 and c not in lst %}
+              {% set lst = lst + [c] %}
+            {% endif %}
+          {% endfor %}
+          {% if lst|length == 0 %}
+            OK
+          {% else %}
+            {{ lst | join(', ') }}
+          {% endif %}
+
+      # --- Flow in L/h (the native Modbus sensor reports m³/h) ---
+      - name: "NMT Pump Flow L/h"
+        unique_id: nmt_pump_flow_lh
+        unit_of_measurement: "L/h"
+        availability: >
+          {{ states('sensor.nmt_pump_flow') | is_number }}
+        state: "{{ (states('sensor.nmt_pump_flow') | float(0) * 1000) | round(0) }}"
+        device_class: volume_flow_rate
+        state_class: measurement
