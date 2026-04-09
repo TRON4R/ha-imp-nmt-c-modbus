@@ -122,7 +122,7 @@ Siehe [entities.de.md](entities.de.md) für eine vollständige Zuordnung von Reg
 
 ## Dokumentation
 
-- [NMTC-Modul-Handbuch v36 (PDF)](https://imp-pumps.com/wp-content/uploads/2020/03/NMTC_manual_v36.pdf) — offizielle IMP-Pumps-Dokumentation inkl. Modbus-Registerdefinitionen (Kapitel 8)
+- [NMTC-Modul-Handbuch v37 (PDF)](https://imp-pumps.com/wp-content/uploads/2020/03/NMTC_manual_v37.pdf) — offizielle IMP-Pumps-Dokumentation inkl. Modbus-Registerdefinitionen (Kapitel 8)
 
 ## Lizenz
 

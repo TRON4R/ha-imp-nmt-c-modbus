@@ -122,7 +122,7 @@ See [entities.en.md](entities.en.md) for a complete mapping of registers to enti
 
 ## Documentation
 
-- [NMTC module manual v36 (PDF)](https://imp-pumps.com/wp-content/uploads/2020/03/NMTC_manual_v36.pdf) — official IMP Pumps documentation including Modbus register definitions (chapter 8)
+- [NMTC module manual v37 (PDF)](https://imp-pumps.com/wp-content/uploads/2020/03/NMTC_manual_v37.pdf) — official IMP Pumps documentation including Modbus register definitions (chapter 8)
 
 ## License
 
