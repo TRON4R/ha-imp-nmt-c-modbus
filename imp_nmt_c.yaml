@@ -488,7 +488,7 @@ template:
 
       # --- Flow in L/h (the native Modbus sensor reports m³/h) ---
       - name: "NMT Pump Flow L/h"
-        unique_id: nmt_pump_flow_lh
+        unique_id: nmt_pump_flow_l_h
         unit_of_measurement: "L/h"
         availability: >
           {{ states('sensor.nmt_pump_flow') | is_number }}

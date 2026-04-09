@@ -481,7 +481,7 @@ template:
       # --- Durchfluss Sensor zeigt nativ m³/h an statt L/h. Die Lambda WP aber L/h ---
       # --- Dieser Template-Sensor spiegelt den Original-Modbus-Sensor in L/h zur besseren Vergleichbarkeit in Kurven ---
       - name: "NMT Pumpe Durchfluss L/h"
-        unique_id: nmt_pumpe_durchfluss_lh
+        unique_id: nmt_pumpe_durchfluss_l_h
         unit_of_measurement: "L/h"
         availability: >
           {{ states('sensor.nmt_pumpe_durchfluss') | is_number }}
