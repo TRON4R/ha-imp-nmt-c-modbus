@@ -62,7 +62,7 @@ Alle Sensoren sind mit korrekten und vollständigen HA-Metadaten definiert: `uni
 ## Dashboard-Karte (optional)
 
 <p align="center">
-  <img src="images/dashboard_screenshot.png" alt="NMT Pumpe Dashboard" width="400"/>
+  <img src="images/dashboard_screenshot.png" alt="NMT Pumpe Dashboard"/>
 </p>
 
 Die Datei `dashboard_card.de.yaml` enthält eine fertige Lovelace-Karte mit Gauge-Anzeigen für Förderhöhe, Leistung, Drehzahl, Durchfluss, Sollwert und Wassertemperatur.

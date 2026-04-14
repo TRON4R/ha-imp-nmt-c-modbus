@@ -62,7 +62,7 @@ All sensors are defined with correct and complete HA metadata: `unique_id`, `dev
 ## Dashboard Card (optional)
 
 <p align="center">
-  <img src="images/dashboard_screenshot.png" alt="NMT Pump Dashboard" width="400"/>
+  <img src="images/dashboard_screenshot.png" alt="NMT Pump Dashboard"/>
 </p>
 
 The file `dashboard_card.yaml` contains a ready-to-use Lovelace card with gauges for head, power, speed, flow, setpoint and liquid temperature.
