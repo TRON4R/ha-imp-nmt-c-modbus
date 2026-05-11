@@ -1,8 +1,11 @@
 # ==============================================================================
 # IMP NMT C Serie — Home Assistant Modbus TCP Integration
 # ==============================================================================
+# Version:       v1.1.0 (2026-05-11)
 # NMTC-Modul (Art. 7340055) Modbus TCP Konfiguration
 # Dokumentation: NMTC-Handbuch v37, Kapitel 8 „Modbus"
+# Repo:          https://github.com/TRON4R/ha-imp-nmt-c-modbus
+# Changelog:     https://github.com/TRON4R/ha-imp-nmt-c-modbus/blob/main/CHANGELOG.de.md
 #
 # Kompatible Pumpen: NMT Smart C, NMT Max C, NMT Lan C, NMT Max II C,
 #                    NMT Smart II C
@@ -40,7 +43,7 @@ modbus:
         precision: 2
         device_class: distance
         state_class: measurement
-        # scan_interval: 30
+        scan_interval: 30
         
       - name: "NMT Pumpe Durchfluss" # Maximalwert ist 13.4 m³/h
         unique_id: nmt_pump_flow
@@ -53,7 +56,7 @@ modbus:
         precision: 1
         device_class: volume_flow_rate # added, weil HA inzwischen Volume flows unterstützt
         state_class: measurement
-        # scan_interval: 30
+        scan_interval: 30
 
       - name: "NMT Pumpe Effizienz"
         unique_id: nmt_pump_efficiency
@@ -65,7 +68,7 @@ modbus:
         scale: 0.01
         precision: 1
         state_class: measurement
-        # scan_interval: 30
+        scan_interval: 30
 
       - name: "NMT Pumpe Drehzahl" # Maximalwert ist 5000 rpm
         unique_id: nmt_pump_speed
@@ -76,7 +79,7 @@ modbus:
         unit_of_measurement: "rpm"
         # device_class: speed # muss raus, weil sonst Fehlermeldung in HA. Speed erlaubt nur Geschwindigkeiten, keine rpm
         state_class: measurement
-        # scan_interval: 30
+        scan_interval: 30
 
       - name: "NMT Pumpe Frequenz"
         unique_id: nmt_pump_frequency
@@ -89,7 +92,7 @@ modbus:
         precision: 1
         device_class: frequency
         state_class: measurement
-        # scan_interval: 30
+        scan_interval: 30
 
       - name: "NMT Pumpe tats. Sollwert"
         unique_id: nmt_pump_actual_setpoint
@@ -102,7 +105,7 @@ modbus:
         scale: 0.01
         precision: 2
         state_class: measurement
-        # scan_interval: 30
+        scan_interval: 30
 
       - name: "NMT Pumpe Stromverbrauch" # Maximalwert ist 380 W
         unique_id: nmt_pump_power_consumption
@@ -113,7 +116,7 @@ modbus:
         unit_of_measurement: "W"
         device_class: power
         state_class: measurement
-        # scan_interval: 30
+        scan_interval: 30
 
       - name: "NMT Pumpe Temperatur Elektronik"
         unique_id: nmt_pump_temp_circuit
@@ -126,7 +129,7 @@ modbus:
         precision: 1
         device_class: temperature
         state_class: measurement
-        # scan_interval: 30
+        scan_interval: 60
 
       - name: "NMT Pumpe Temperatur Motor"
         unique_id: nmt_pump_temp_motor
@@ -139,7 +142,7 @@ modbus:
         precision: 1
         device_class: temperature
         state_class: measurement
-        # scan_interval: 30
+        scan_interval: 60
 
       - name: "NMT Pumpe Temperatur Wasser"
         unique_id: nmt_pump_temp_liquid
@@ -152,7 +155,7 @@ modbus:
         precision: 1
         device_class: temperature
         state_class: measurement
-        # scan_interval: 30
+        scan_interval: 60
 
     #
     # the following registers are not available for the NMT Max II C SM 25-120
@@ -203,7 +206,7 @@ modbus:
         input_type: holding
         slave: 245
         data_type: uint16
-        # scan_interval: 30
+        scan_interval: 30
 
       - name: "NMT Pumpe Alt. Betriebsmodus (Status)"
         unique_id: nmt_pump_alt_control_mode_status
@@ -211,7 +214,7 @@ modbus:
         input_type: holding
         slave: 245
         data_type: uint16
-        # scan_interval: 30
+        scan_interval: 30
         # Hinweis: Das ist ein Enum/Codelist-Wert (kein unit/device_class sinnvoll).
 
       - name: "NMT Pumpe Fehlercode 1"
@@ -220,7 +223,7 @@ modbus:
         input_type: holding
         slave: 245
         data_type: uint16
-        # scan_interval: 30
+        scan_interval: 30
         # Fehlercodes sind numerische Codes; i.d.R. keine unit/device_class/state_class.
 
       - name: "NMT Pumpe Fehlercode 2"
@@ -229,7 +232,7 @@ modbus:
         input_type: holding
         slave: 245
         data_type: uint16
-        # scan_interval: 30
+        scan_interval: 30
 
       - name: "NMT Pumpe Fehlercode 3"
         unique_id: nmt_pump_error_code_3
@@ -237,7 +240,7 @@ modbus:
         input_type: holding
         slave: 245
         data_type: uint16
-        # scan_interval: 30
+        scan_interval: 30
 
       - name: "NMT Pumpe Betriebsmodus (Status)"
         unique_id: nmt_pump_control_mode_status
@@ -245,7 +248,7 @@ modbus:
         input_type: holding
         slave: 245
         data_type: uint16
-        # scan_interval: 30
+        scan_interval: 30
         # Ebenfalls Enum/Codelist; keine unit/device_class sinnvoll.
 
   # ==========================================================================
@@ -504,3 +507,22 @@ template:
         state_class: measurement
 
 
+# --- Automationen ---
+# Diese Sektion steht auf gleicher Ebene wie 'modbus:' und 'template:'.
+automation:
+  - id: nmt_alarm_notification
+    alias: "NMT: Fehler-Benachrichtigung"
+    description: >
+      Erzeugt eine HA-Notification, sobald der aggregierte Störungsstatus
+      auf 'on' wechselt (einer der drei Fehlercode-Register != 0).
+    trigger:
+      - platform: state
+        entity_id: binary_sensor.nmt_pumpe_aggregierter_storungsstatus
+        to: 'on'
+    action:
+      - action: persistent_notification.create
+        data:
+          title: "NMT Pumpenfehler"
+          message: >
+            Aktive Fehlercodes: {{ states('sensor.nmt_pumpe_fehler_zusammenfassung') }}
+    mode: single

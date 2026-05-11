@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.1.0 (2026-05-11)
+
+- Neue Automation `nmt_alarm_notification`: Erzeugt HA-Notification bei aktivem Fehler.
+  Trigger: aggregierter Störungsstatus → 'on'. Message enthält die aktiven Fehlercodes als Klartext.
+- Header modernisiert: Version-Stamp, Repo- und Changelog-Link ergänzt.
+- `scan_interval` explizit gesetzt (vorher HA-Default): Messwerte 30 s, Temperaturen 60 s,
+  Status-/Fehlercode-Register 30 s. Reduziert Modbus-Bus-Traffic und ist selbst-dokumentierend.
+
 ## v1.0.0 (2026-04-09)
 
 Erstveröffentlichung.
